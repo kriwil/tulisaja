@@ -10,6 +10,7 @@ import re
 def main():
     source_dir = 'source/'
     journal_dir = '/home/aldi/Workspace/kriwil.com/journal/'
+    archive_dir = '/home/aldi/Workspace/kriwil.com/archive/'
 
     # jinja
     env = Environment(loader=PackageLoader('tulis', 'templates'))
@@ -22,10 +23,13 @@ def main():
     current_day = date.today().day
 
     years = os.listdir(source_dir)
+    archives = {}
 
     for year in years:
         if int(year) > current_year:
             continue
+
+        archives[year] = []
 
         source_year = source_dir + "%s/" % year
         months = os.listdir(source_year)
@@ -41,16 +45,27 @@ def main():
                 if all([int(year) == current_year, int(month) == current_month, int(day) > current_day]):
                     continue
 
+                item_date = "%s-%s" % (month, day)
+                #archives[year][archive_key] = []
+
+                archive_set = dict(
+                    date=item_date,
+                )
+
                 source_day = source_month + "%s/" % day
                 items = os.listdir(source_day)
 
                 for item in items:
+
                     source_item = source_day + item
 
                     # get title
                     # file is in format 'nn_journal-title.md'
                     # where nn is number to have article in correct order
                     title = re.sub('\.md$', '', item)
+
+                    #archives[year][archive_key].append(title)
+                    archive_set['title'] = title
 
                     item_markdown = open(source_item)
 
@@ -73,6 +88,24 @@ def main():
                     index.close()
 
                     print "%s created" % title
+
+                archives[year].append(archive_set)
+
+        #print archives
+
+        # create archive
+        target_archive = archive_dir + "%s/" % year
+        try:
+            os.makedirs(target_archive)
+        except OSError:
+            pass
+
+        # create index
+        archive_index = open(target_archive + "index.html", 'w')
+        archive_index.write('archive')
+        archive_index.close()
+
+        print "%s created" % target_archive
 
 
 if __name__ == '__main__':
