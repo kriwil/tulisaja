@@ -6,3 +6,4 @@ Static html using markdown. Early development stage.
 
 - separate settings
 - test :P
+- rss

@@ -9,8 +9,9 @@ import re
 
 def main():
     source_dir = 'source/'
-    journal_dir = '/home/aldi/Workspace/kriwil.com/journal/'
-    archive_dir = '/home/aldi/Workspace/kriwil.com/archive/'
+    content_dir = '/home/aldi/Workspace/kriwil.com/content/'
+    journal_dir = content_dir + 'journal/'
+    archive_dir = content_dir + 'archive/'
 
     # jinja
     env = Environment(loader=PackageLoader('tulis', 'templates'))
