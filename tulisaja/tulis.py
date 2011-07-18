@@ -8,7 +8,7 @@ import re
 
 
 def main():
-    source_dir = 'source/'
+    source_dir = '/home/aldi/Workspace/kriwil.com/source/'
     content_dir = '/home/aldi/Workspace/kriwil.com/content/'
     journal_dir = content_dir + 'journal/'
     archive_dir = content_dir + 'archive/'
