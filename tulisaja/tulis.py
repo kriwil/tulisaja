@@ -8,8 +8,8 @@ import re
 
 
 def main():
-    source_dir = '../kriwil.com/source/'
-    content_dir = '../kriwil.com/content/'
+    source_dir = '../../kriwil.com/source/'
+    content_dir = '../../kriwil.com/content/'
     journal_dir = content_dir + 'journal/'
     archive_dir = content_dir + 'archive/'
 
@@ -30,7 +30,7 @@ def main():
         if int(year) > current_year:
             continue
 
-        archives[year] = []
+        archives[year] = {}
 
         source_year = source_dir + "%s/" % year
         months = os.listdir(source_year)
@@ -46,12 +46,9 @@ def main():
                 if all([int(year) == current_year, int(month) == current_month, int(day) > current_day]):
                     continue
 
-                item_date = "%s-%s" % (month, day)
-                #archives[year][archive_key] = []
-
-                archive_set = dict(
-                    date=item_date,
-                )
+                item_date = "%s%s" % (month, day)
+                item_date = str(int(item_date))
+                archives[year][item_date] = []
 
                 source_day = source_month + "%s/" % day
                 items = os.listdir(source_day)
@@ -59,20 +56,21 @@ def main():
                 for item in items:
 
                     source_item = source_day + item
-                    print "processing %s ..." % source_item
+                    # print "processing %s ..." % source_item
 
                     # get title
                     # file is in format 'nn_journal-title.md'
                     # where nn is number to have article in correct order
                     title = re.sub('\.md$', '', item)
 
-                    #archives[year][archive_key].append(title)
-                    archive_set['title'] = title
-
                     item_markdown = open(source_item)
 
                     raw_content = item_markdown.read()
                     html_content = markdown(raw_content)
+
+                    title_search = re.match("## (.+)\r\n", raw_content)
+                    real_title = title_search.group(1)
+                    archives[year][item_date].append(real_title)
 
                     # create directory
                     target = journal_dir + "%s/" % title
@@ -89,11 +87,7 @@ def main():
                     index.write(full_html)
                     index.close()
 
-                    print "%s created" % title
-
-                archives[year].append(archive_set)
-
-        #print archives
+                    print "%s%s created" % (target, title)
 
         # create archive
         target_archive = archive_dir + "%s/" % year
@@ -102,9 +96,24 @@ def main():
         except OSError:
             pass
 
+        # sort archives
+        archive_dates = [int(blog_date) for blog_date, blog_titles in archives[year].items()]
+        archive_dates.sort()
+        archive_dates.reverse()
+
         # create index
         archive_index = open(target_archive + "index.html", 'w')
-        archive_index.write('archive')
+        for blog_date in archive_dates:
+            blog_date = str(blog_date)
+
+            titles = archives[year][blog_date]
+            for blog_title in titles:
+                archive_index.write("%s %s\r\n" % (blog_date, blog_title))
+
+        #for blog_date, blog_titles in archives[year].items():
+        #    for blog_title in blog_titles:
+        #        archive_index.write("%s %s\r\n" % (blog_date, blog_title))
+
         archive_index.close()
 
         print "%s created" % target_archive
