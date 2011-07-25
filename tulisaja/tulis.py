@@ -24,6 +24,10 @@ current_day = date.today().day
 
 years = os.listdir(source_dir)
 archives = {}
+months_ref = [
+    'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+    'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec',
+]
 
 
 def process_items(items, year, item_date, source_day):
@@ -106,9 +110,13 @@ def create_archives(year):
     for blog_date in archive_dates:
         blog_date = str(blog_date)
 
+        item_date = blog_date[-2:]
+        month_index = int(blog_date[:-2]) - 1
+        item_month = months_ref[month_index]
+
         titles = archives[year][blog_date]
         for blog_title in titles:
-            archive_index.write("%s %s\r\n" % (blog_date, blog_title))
+            archive_index.write("%s %s - %s\r\n" % (item_month, item_date, blog_title))
 
     archive_index.close()
 
