@@ -8,8 +8,8 @@ import re
 
 
 def main():
-    source_dir = '/home/aldi/Workspace/kriwil.com/source/'
-    content_dir = '/home/aldi/Workspace/kriwil.com/content/'
+    source_dir = '../kriwil.com/source/'
+    content_dir = '../kriwil.com/content/'
     journal_dir = content_dir + 'journal/'
     archive_dir = content_dir + 'archive/'
 
@@ -59,6 +59,7 @@ def main():
                 for item in items:
 
                     source_item = source_day + item
+                    print "processing %s ..." % source_item
 
                     # get title
                     # file is in format 'nn_journal-title.md'
