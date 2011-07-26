@@ -44,7 +44,7 @@ def process_items(items, year, item_date, source_day):
         raw_content = item_markdown.read()
         html_content = markdown(raw_content)
 
-        title_search = re.match("## (.+)\r\n", raw_content)
+        title_search = re.match("### (.+)\r\n", raw_content)
         real_title = title_search.group(1)
         archives[year][item_date].append(real_title)
 
