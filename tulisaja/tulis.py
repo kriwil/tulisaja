@@ -16,14 +16,15 @@ source_dir = '../../kriwil.com/source/'
 content_dir = '../../kriwil.com/content/'
 journal_dir = content_dir + 'journal/'
 archive_dir = content_dir + 'archive/'
-rss_post_count = 10
+latest_post_count = 10
 
 # jinja
 env = Environment(loader=PackageLoader('tulis', 'templates'))
 env.filters['rss_datetime_format'] = rss_datetime_format
 
-template = env.get_template('base.html')
+template = env.get_template('journal.html')
 archive_template = env.get_template('archive.html')
+index_template = env.get_template('index.html')
 feed_template = env.get_template('rss.xml')
 
 # get current date set
@@ -141,6 +142,15 @@ def create_archives(year):
     print "%s created" % target_archive
 
 
+def create_index(posts):
+    # reverse
+    posts.reverse()
+
+    index_html = index_template.render(posts=posts)
+    index_file = open(content_dir + "index.html", 'w')
+    index_file.write(index_html)
+    index_file.close()
+
 
 def create_rss(posts):
     # reverse
@@ -167,6 +177,7 @@ def main():
         process_months(months, year, source_year)
         create_archives(year)
 
+    create_index(latest_posts)
     create_rss(latest_posts)
 
 if __name__ == '__main__':

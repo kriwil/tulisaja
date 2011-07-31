@@ -1,3 +1,6 @@
+{% extends 'base.html' %}
+
+{% block content %}
 <div>
 {% for year in years %}
     <a href="#">{{ year }}</a>
@@ -8,3 +11,4 @@
     <a href="#">{{ post.title }}</a>
 {% endfor %}
 </div>
+{% endblock %}
