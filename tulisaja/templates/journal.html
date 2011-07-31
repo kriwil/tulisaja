@@ -1,6 +1,5 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<h3>{{ post.title }}</h3>
-{{ post.content }}
+{% include 'post.html' %}
 {% endblock %}
