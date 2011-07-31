@@ -1,37 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
     <channel>
-        <title>Your title goes here</title>
-        <description>Your RSS feed description goes here</description>
-        <link>http://www.rssFeedFolder.com/</link>
+        <title>kriwil.com</title>
+        <description>Personal site of Aldiantoro - kriwil - Nugroho</description>
+        <link>http://kriwil.com/</link>
         <language>en</language>
-        <copyright>rssFeedFolder.com</copyright>
+        <copyright>kriwil.com</copyright>
         <pubDate>Fri, 07 Dec 2007 21:58:26 CST</pubDate>
         <lastBuildDate>Fri, 07 Dec 2007 21:58:26 CST</lastBuildDate>
-        <generator>rssFeedFolder.com</generator>
+        <generator>http://github.com/kriwil/tulisaja/</generator>
         <ttl>30</ttl>
-        <atom:link href="http://www.yourdomain.com/yourfeed.xml" rel="self" type="application/rss+xml" />
+        <atom:link href="http://kriwil.com/feed.xml" rel="self" type="application/rss+xml" />
+        {#
         <image>
             <title>Your title goes here</title>
             <url>http://www.rssFeedFolder.com/images/rssFeedFolderLogo.gif</url>
             <link>http://www.rssFeedFolder.com/</link>
             <description>your RSS feed description goes here</description>
         </image>
+        #}
+        {% for post in posts %}
         <item>
-            <title>Your first feed file goes here</title>
-            <description>A brief description of the file goes here</description>
-            <link>http://www.yourdomain.com/rssfeedfolder/file1.html</link>
-            <guid isPermaLink="true">http://www.yourdomain.com/rssfeedfolder/file1.html</guid>
+            <title>{{ post.title|e }}</title>
+            <description>{{ post.content|e }}</description>
+            <link>http://kriwil.com/journal/{{ post.slug }}/</link>
+            <guid isPermaLink="true">http://kriwil.com/journal/{{ post.slug }}/</guid>
             <pubDate>Tue, 04 Dec 2007 09:19:42 CST</pubDate>
-            <source url="http://www.rssFeedFolder.com/">rssFeedFolder.com</source>
+            <source url="http://kriwil.com/">kriwil.com</source>
         </item>
-        <item>
-            <title>Your second feed file goes here</title>
-            <description>A brief description of the file goes here</description>
-            <link>http://www.yourdomain.com/rssfeedfolder/file2.html</link>
-            <guid isPermaLink="true">http://www.yourdomain.com/rssfeedfolder/file1.html</guid>
-            <pubDate>Web, 05 Dec 2007 10:23:10 CST</pubDate>
-            <source url="http://www.rssFeedFolder.com/">rssFeedFolder.com</source>
-        </item>
+        {% endfor %}
     </channel>
 </rss>

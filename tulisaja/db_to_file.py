@@ -5,7 +5,7 @@ import os
 
 
 source_dir = 'source/'
-conn = MySQLdb.connect(host='localhost', user='root', passwd='akarakar',
+conn = MySQLdb.connect(host='localhost', user='root', passwd='aldikeren',
                        db='kriwil')
 
 cursor = conn.cursor()
@@ -32,7 +32,7 @@ while (True):
         'time': str(time),
     }
 
-    meta_data = "\r\n\r\n<!-- %s -->\r\n" % json.dumps(meta_data)
+    meta_data = "\r\n\r\n<!-- METADATA: %s -->\r\n" % json.dumps(meta_data)
 
     content_file = open("%s/%s.md" % (full_path, slug), "wb")
     content_file.write("### %s\r\n\r\n" % title)

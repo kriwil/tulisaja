@@ -4,7 +4,8 @@
 <title>kriwil.com{% block title %}{% endblock %}</title>
 </head>
 <body>
-{{ entry_content }}
+<h3>{{ post.title }}</h3>
+{{ post.content }}
 {% block content %}{% endblock %}
 </body>
 </html>

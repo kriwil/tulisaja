@@ -3,6 +3,7 @@
 from datetime import date
 from jinja2 import Environment, PackageLoader
 from markdown2 import markdown
+import json
 import os
 import re
 
@@ -11,10 +12,12 @@ source_dir = '../../kriwil.com/source/'
 content_dir = '../../kriwil.com/content/'
 journal_dir = content_dir + 'journal/'
 archive_dir = content_dir + 'archive/'
+rss_post_count = 10
 
 # jinja
 env = Environment(loader=PackageLoader('tulis', 'templates'))
 template = env.get_template('base.html')
+feed_template = env.get_template('rss.xml')
 
 # get current date set
 # only processing data <= current date
@@ -29,8 +32,11 @@ months_ref = [
     'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec',
 ]
 
+latest_posts = []
+
 
 def process_items(items, year, item_date, source_day):
+
     for item in items:
         source_item = source_day + item
 
@@ -40,13 +46,25 @@ def process_items(items, year, item_date, source_day):
         title = re.sub('\.md$', '', item)
 
         item_markdown = open(source_item)
-
         raw_content = item_markdown.read()
-        html_content = markdown(raw_content)
+
+        metadata_search = re.search("METADATA: (.+) -->", raw_content, re.DOTALL).group(1)
+        metadata = json.loads(metadata_search)
 
         title_search = re.match("### (.+)\r\n", raw_content)
         real_title = title_search.group(1)
+
         archives[year][item_date].append(real_title)
+
+        raw_content = raw_content.replace(title_search.group(0), '').strip()
+        html_content = markdown(raw_content)
+
+        post_set = {
+            'title': real_title,
+            'slug': title,
+            'content': html_content,
+            'time': metadata['time'],
+        }
 
         # create directory
         target = journal_dir + "%s/" % title
@@ -56,12 +74,18 @@ def process_items(items, year, item_date, source_day):
             print "Directory %s exists" % target
             pass
 
-        full_html = template.render(entry_content=html_content)
+        full_html = template.render(post=post_set)
 
         # create index.html
         index = open(target + "index.html", 'w')
         index.write(full_html)
         index.close()
+
+        # if full, remove first content from list
+        if len(latest_posts) == 10:
+            latest_posts.pop(0)
+
+        latest_posts.append(post_set)
 
         print "%s%s created" % (target, title)
 
@@ -123,6 +147,16 @@ def create_archives(year):
     print "%s created" % target_archive
 
 
+def create_rss(posts):
+    # reverse
+    posts.reverse()
+
+    full_xml = feed_template.render(posts=posts)
+    xml_file = open(content_dir + "feed.xml", 'w')
+    xml_file.write(full_xml)
+    xml_file.close()
+
+
 def main():
 
     for year in years:
@@ -135,9 +169,9 @@ def main():
         months = os.listdir(source_year)
 
         process_months(months, year, source_year)
-
         create_archives(year)
 
+    create_rss(latest_posts)
 
 if __name__ == '__main__':
     main()
