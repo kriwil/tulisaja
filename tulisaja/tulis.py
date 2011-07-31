@@ -57,10 +57,10 @@ def process_items(items, year, item_date, source_day):
         item_markdown = open(source_item)
         raw_content = item_markdown.read()
 
-        title_search = re.match("### (.+)\r\n", raw_content)
+        title_search = re.match("### (.+)", raw_content)
         real_title = title_search.group(1)
 
-        raw_content = raw_content.replace(title_search.group(0), '').strip()
+        raw_content = raw_content.replace(title_search.group(0), '')
         html_content = markdown(raw_content)
 
         metadata_search = re.search("METADATA: (.+) -->", raw_content, re.DOTALL).group(1)
