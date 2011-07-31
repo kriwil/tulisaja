@@ -10,15 +10,15 @@
     <div class="clearfix container">
         <h1><a href="/">kriwil</a></h1>
         <div class="about-me">
-            <p>Hi, I'm Aldiantoro Nugroho, (web) developer from <a href="#">Jakarta</a>, <a href="#">Indonesia</a>.<br>I currently live in <a href="#">Kuala Lumpur</a>, <a href="#">Malaysia</a>.</p>
+            <p>Hi, I'm Aldiantoro Nugroho, (web) developer from Jakarta, Indonesia.<br>I currently live in Kuala Lumpur, Malaysia.</p>
         </div>
     </div>
 </div>
 <div class="navigation">
     <div class="clearfix container">
         <ul>
-            <li class="active"><a href="/">journal</a></li>
-            <li><a href="/archive/">archive</a></li>
+            <li class="{% block nav_journal %}{% endblock %}"><a href="/">journal</a></li>
+            <li class="{% block nav_archive %}{% endblock %}"><a href="/archive/2011/">archive</a></li>
         </ul>
     </div>
 </div>
@@ -30,7 +30,7 @@
 <div class="information">
     <div class="clearfix container">
         <div class="about">
-            <p>Hi, I'm Aldiantoro Nugroho, (web) developer from <a href="#">Jakarta</a>, <a href="#">Indonesia</a>. I live in <a href="#">Kuala Lumpur</a>, <a href="#">Malaysia</a>.</p>
+            <p>Hi, I'm Aldiantoro Nugroho, (web) developer from Jakarta, Indonesia. I currently live in Kuala Lumpur, Malaysia.</p>
             <p>Currently, I have interests in python, django, html, css, javascript, and web development in general.</p>
             <p>And this is my personal website.</p>
         </div>

@@ -1,14 +1,19 @@
 {% extends 'base.html' %}
 
+{% block nav_archive %}active{% endblock %}
+
 {% block content %}
-<div>
+<ul class="archive-year">
 {% for year in years %}
-    <a href="#">{{ year }}</a>
+    <li class="{% if current_year == year %}active{% endif %}"><a href="/archive/{{ year }}">{{ year }}</a></li>
 {% endfor %}
-</div>
-<div>
+</ul>
+<ul class="archive-post">
 {% for post in archives %}
-    <a href="#">{{ post.title }}</a>
+    <li>
+        <span class="date">{{ post.time|rss_datetime_format("%b %d") }}</span>
+        <a href="/journal/{{ post.slug }}">{{ post.title }}</a>
+    </li>
 {% endfor %}
-</div>
+</ul>
 {% endblock %}

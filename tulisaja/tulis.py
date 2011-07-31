@@ -132,7 +132,10 @@ def create_archives(year):
     except OSError:
         pass
 
-    archive_html = archive_template.render(years=years, current_year=year, archives=archive_posts[year])
+    archives = archive_posts[year]
+    archives.reverse()
+
+    archive_html = archive_template.render(years=years, current_year=year, archives=archives)
 
     # create index
     archive_index = open(target_archive + "index.html", 'w')
