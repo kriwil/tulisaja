@@ -147,9 +147,10 @@ def create_archives(year):
 
 def create_index(posts):
     # reverse
-    posts.reverse()
+    index_posts = posts
+    index_posts.reverse()
 
-    index_html = index_template.render(posts=posts)
+    index_html = index_template.render(posts=index_posts)
     index_file = open(content_dir + "index.html", 'w')
     index_file.write(index_html)
     index_file.close()
@@ -157,9 +158,10 @@ def create_index(posts):
 
 def create_rss(posts):
     # reverse
-    posts.reverse()
+    rss_posts = posts
+    #rss_posts.reverse()
 
-    full_xml = feed_template.render(posts=posts)
+    full_xml = feed_template.render(posts=rss_posts)
     xml_file = open(content_dir + "feed.xml", 'w')
     xml_file.write(full_xml)
     xml_file.close()
