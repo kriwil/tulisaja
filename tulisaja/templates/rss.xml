@@ -6,8 +6,8 @@
         <link>http://kriwil.com/</link>
         <language>en</language>
         <copyright>kriwil.com</copyright>
-        <pubDate>Fri, 07 Dec 2007 21:58:26 CST</pubDate>
-        <lastBuildDate>Fri, 07 Dec 2007 21:58:26 CST</lastBuildDate>
+        <pubDate>{{ posts[0].time|rss_datetime_format }}</pubDate>
+        <lastBuildDate>{{ posts[0].time|rss_datetime_format }}</lastBuildDate>
         <generator>http://github.com/kriwil/tulisaja/</generator>
         <ttl>30</ttl>
         <atom:link href="http://kriwil.com/feed.xml" rel="self" type="application/rss+xml" />
@@ -25,7 +25,7 @@
             <description>{{ post.content|e }}</description>
             <link>http://kriwil.com/journal/{{ post.slug }}/</link>
             <guid isPermaLink="true">http://kriwil.com/journal/{{ post.slug }}/</guid>
-            <pubDate>Tue, 04 Dec 2007 09:19:42 CST</pubDate>
+            <pubDate>{{ post.time|rss_datetime_format }}</pubDate>
             <source url="http://kriwil.com/">kriwil.com</source>
         </item>
         {% endfor %}

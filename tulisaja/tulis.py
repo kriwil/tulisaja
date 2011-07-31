@@ -1,11 +1,15 @@
 #!/usr/bin/env python
 
-from datetime import date
+from datetime import date, datetime
 from jinja2 import Environment, PackageLoader
 from markdown2 import markdown
 import json
 import os
 import re
+
+
+def rss_datetime_format(value, format="%a, %d %b %Y %H:%M:%S +0700"):
+    return value.strftime(format)
 
 
 source_dir = '../../kriwil.com/source/'
@@ -16,7 +20,10 @@ rss_post_count = 10
 
 # jinja
 env = Environment(loader=PackageLoader('tulis', 'templates'))
+env.filters['rss_datetime_format'] = rss_datetime_format
+
 template = env.get_template('base.html')
+archive_template = env.get_template('archive.html')
 feed_template = env.get_template('rss.xml')
 
 # get current date set
@@ -26,13 +33,14 @@ current_month = date.today().month
 current_day = date.today().day
 
 years = os.listdir(source_dir)
-archives = {}
+years.sort()
 months_ref = [
     'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
     'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec',
 ]
 
 latest_posts = []
+archive_posts = {}
 
 
 def process_items(items, year, item_date, source_day):
@@ -61,7 +69,7 @@ def process_items(items, year, item_date, source_day):
             'title': real_title,
             'slug': title,
             'content': html_content,
-            'time': metadata['time'],
+            'time': datetime.strptime(metadata['time'], "%Y-%m-%d %H:%M:%S"),
         }
 
         # create directory
@@ -83,25 +91,24 @@ def process_items(items, year, item_date, source_day):
         if len(latest_posts) == 10:
             latest_posts.pop(0)
 
-        archives[year][item_date].append(real_title)
         latest_posts.append(post_set)
+        archive_posts[year].append(post_set)
 
         print "%s%s created" % (target, title)
 
 
 def process_days(days, year, month, source_month):
-   for day in days:
-       if all([int(year) == current_year, int(month) == current_month, int(day) > current_day]):
-           continue
+    for day in days:
+        if all([int(year) == current_year, int(month) == current_month, int(day) > current_day]):
+            continue
 
-       item_date = "%s%s" % (month, day)
-       item_date = str(int(item_date))
-       archives[year][item_date] = []
+        item_date = "%s%s" % (month, day)
+        item_date = str(int(item_date))
 
-       source_day = source_month + "%s/" % day
-       items = os.listdir(source_day)
+        source_day = source_month + "%s/" % day
+        items = os.listdir(source_day)
 
-       process_items(items, year, item_date, source_day)
+        process_items(items, year, item_date, source_day)
 
 
 def process_months(months, year, source_year):
@@ -111,6 +118,7 @@ def process_months(months, year, source_year):
  
         source_month = source_year + "%s/" % month
         days = os.listdir(source_month)
+        days.sort()
  
         process_days(days, year, month, source_month)
 
@@ -123,27 +131,15 @@ def create_archives(year):
     except OSError:
         pass
 
-    # sort archives
-    archive_dates = [int(blog_date) for blog_date, blog_titles in archives[year].items()]
-    archive_dates.sort()
-    archive_dates.reverse()
+    archive_html = archive_template.render(years=years, current_year=year, archives=archive_posts[year])
 
     # create index
     archive_index = open(target_archive + "index.html", 'w')
-    for blog_date in archive_dates:
-        blog_date = str(blog_date)
-
-        item_date = blog_date[-2:]
-        month_index = int(blog_date[:-2]) - 1
-        item_month = months_ref[month_index]
-
-        titles = archives[year][blog_date]
-        for blog_title in titles:
-            archive_index.write("%s %s - %s\r\n" % (item_month, item_date, blog_title))
-
+    archive_index.write(archive_html)
     archive_index.close()
 
     print "%s created" % target_archive
+
 
 
 def create_rss(posts):
@@ -162,10 +158,11 @@ def main():
         if int(year) > current_year:
             continue
 
-        archives[year] = {}
+        archive_posts[year] = []
 
         source_year = source_dir + "%s/" % year
         months = os.listdir(source_year)
+        months.sort()
 
         process_months(months, year, source_year)
         create_archives(year)
