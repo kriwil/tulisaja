@@ -48,16 +48,14 @@ def process_items(items, year, item_date, source_day):
         item_markdown = open(source_item)
         raw_content = item_markdown.read()
 
-        metadata_search = re.search("METADATA: (.+) -->", raw_content, re.DOTALL).group(1)
-        metadata = json.loads(metadata_search)
-
         title_search = re.match("### (.+)\r\n", raw_content)
         real_title = title_search.group(1)
 
-        archives[year][item_date].append(real_title)
-
         raw_content = raw_content.replace(title_search.group(0), '').strip()
         html_content = markdown(raw_content)
+
+        metadata_search = re.search("METADATA: (.+) -->", raw_content, re.DOTALL).group(1)
+        metadata = json.loads(metadata_search)
 
         post_set = {
             'title': real_title,
@@ -85,6 +83,7 @@ def process_items(items, year, item_date, source_day):
         if len(latest_posts) == 10:
             latest_posts.pop(0)
 
+        archives[year][item_date].append(real_title)
         latest_posts.append(post_set)
 
         print "%s%s created" % (target, title)
