@@ -1,0 +1,5 @@
+<div class="post">
+    <div class="date">{{ post.time|rss_datetime_format("%Y-%m-%d") }}</div>
+    <h3><a href="/journal/{{ post.slug }}">{{ post.title }}</a></h3>
+    {{ post.content }}
+</div>
