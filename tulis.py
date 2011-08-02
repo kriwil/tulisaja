@@ -12,8 +12,8 @@ def rss_datetime_format(value, format="%a, %d %b %Y %H:%M:%S +0700"):
     return value.strftime(format)
 
 
-source_dir = '../../kriwil.com/source/'
-content_dir = '../../kriwil.com/content/'
+source_dir = '../kriwil.com/source/'
+content_dir = '../kriwil.com/content/'
 journal_dir = content_dir + 'journal/'
 archive_dir = content_dir + 'archive/'
 latest_post_count = 10
