@@ -5,7 +5,7 @@ import os
 
 
 source_dir = 'source/'
-conn = MySQLdb.connect(host='localhost', user='root', passwd='aldikeren',
+conn = MySQLdb.connect(host='localhost', user='root', passwd='',
                        db='kriwil')
 
 cursor = conn.cursor()
